@@ -15,9 +15,9 @@ A starting point for a new CMake-based C++ project.
 The following dependencies are mandatory:
 - C++ compiler
 - [CMake](https://cmake.org/documentation/) (3.12 or greater)
-
-The following dependencies are optional:
-- [Doxygen](https://www.doxygen.nl/index.html) and [graphviz](https://graphviz.org/) for documentation.
+- [Boost](https://boost.org)
+- [Intel TBB](https://www.threadingbuildingblocks.org/)
+- [USD](https://github.com/pixaranimationstudios/USD) (20.11)
 
 ## Building
 
