@@ -42,5 +42,6 @@ CMake options for configuring this project:
 | `USD_ROOT`              | Root directory of USD installation                                     |         |
 | `TBB_ROOT`              | Root directory of Intel TBB installation                               |         |
 | `BOOST_ROOT`            | Root directory of Boost installation                                   |         |
+| `ENABLE_PYTHON_SUPPORT` | Enable python support.  Must match python support of USD installation. | `ON`    |
 | `USE_PYTHON_3`          | Build against Python 3 libraries.                                      | `OFF`   |
 | `BUILD_TESTING`         | Enable automated testing.                                              | `OFF`   |
