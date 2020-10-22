@@ -1,0 +1,1 @@
+add_header_only_library(catch2)
