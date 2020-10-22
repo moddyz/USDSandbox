@@ -3,3 +3,4 @@
 include(BaseTools)
 include(DocTools)
 include(CXXTools)
+include(USDPluginTools)

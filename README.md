@@ -1,6 +1,6 @@
-<a href="https://github.com/moddyz/CXXTemplate/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/moddyz/CXXTemplate/workflows/Build%20and%20test/badge.svg"/></a>
+<a href="https://github.com/moddyz/USDSandbox/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/moddyz/USDSandbox/workflows/Build%20and%20test/badge.svg"/></a>
 
-# CXXTemplate
+# USDSandbox
 
 A starting point for a new CMake-based C++ project.
 
@@ -22,32 +22,24 @@ The following dependencies are optional:
 ## Building
 
 Example snippet for building this project:
-```
-mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX="/apps/CXXTemplate/" ..
+```bash
+mkdir build
+cd build
+cmake \
+  -DUSD_ROOT="/apps/usd/20.11/" \
+  -DTBB_ROOT="/apps/usd/20.11/" \
+  -DBOOST_ROOT="/apps/usd/20.11/" \
+  -DCMAKE_INSTALL_PREFIX="/apps/USDPluginExamples/" \
+  ..
 cmake --build  . -- VERBOSE=1 -j8 all test install
 ```
+
 CMake options for configuring this project:
 
 | CMake Variable name     | Description                                                            | Default |
 | ----------------------- | ---------------------------------------------------------------------- | ------- |
+| `USD_ROOT`              | Root directory of USD installation                                     |         |
+| `TBB_ROOT`              | Root directory of Intel TBB installation                               |         |
+| `BOOST_ROOT`            | Root directory of Boost installation                                   |         |
+| `USE_PYTHON_3`          | Build against Python 3 libraries.                                      | `OFF`   |
 | `BUILD_TESTING`         | Enable automated testing.                                              | `OFF`   |
-| `BUILD_DOCUMENTATION`   | Build documentation.                                                   | `OFF`   |
-
-## Template usage
-
-To use this template: 
-1. Create a new repository using **CXXTemplate** as the selected template project.
-2. Replace occurances of "CXXTemplate" with the new project name:
-```bash
-find . -name ".git" -prune -o -type f -exec sed -i "s/CXXTemplate/YOUR_PROJECT_NAME/g" {} +
-```
-3. Remove any un-wanted source directories or files (such as the example library and programs under `src/`).
-
-Convenience functions and macros are available to build libraries, documentation, programs, tests, or export the project:
-- `cpp_library` [Example usage](src/exampleSharedLibrary/CMakeLists.txt)
-- `cpp_executable` [Example usage](src/exampleExecutable/CMakeLists.txt)
-- `cpp_test` [Example usage](src/exampleSharedLibrary/tests/CMakeLists.txt)
-- `export_project` [Example usage](CMakeLists.txt)
-
-See [cmake/macros](cmake/macros) for available tools.

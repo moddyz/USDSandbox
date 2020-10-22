@@ -11,25 +11,26 @@ on:
 
 jobs:
 
-  # Build and test project.
-  linux-build:
+  # ASWF docker images based build
+  aswf-build:
     strategy:
       matrix:
-        build:
-          - 1
+        vfx:
+          - 2020
+          - 2021
         include:
-          - build: 1
-            build-type: Release
-            build-tests: 'ON'
-            build-docs: 'OFF'
-    name: 'Ubuntu 18.04
-      <type=${{ matrix.build-type }},
-       tests=${{ matrix.build-tests }},
-       docs=${{ matrix.build-docs }}>'
+          - vfx: 2020
+            USE_PYTHON_3: ON
+            buildType: Release
+            buildTests: 'ON'
+          - vfx: 2021
+            USE_PYTHON_3: ON
+            buildType: Release
+            buildTests: 'ON'
     runs-on: ubuntu-18.04
+    container:
+        image: aswf/ci-vfxall:${{ matrix.vfx }}
     steps:
-      - name: Install dependencies (Linux)
-        run: sudo apt-get install cmake
       - uses: actions/checkout@v2
       - name: Create build directories
         run: |
@@ -37,10 +38,13 @@ jobs:
           mkdir _install
       - name: Configure
         run: |
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
-                -DBUILD_TESTING=${{ matrix.build-tests }} \
-                -DBUILD_DOCUMENTATION=${{ matrix.build-docs }} \
-                -DCMAKE_INSTALL_PREFIX=../_install \
+          cmake -DUSD_ROOT="/usr/local" \
+                -DTBB_ROOT="/usr/local" \
+                -DBOOST_ROOT="/usr/local" \
+                -DUSE_PYTHON_3=${{ matrix.USE_PYTHON_3 }} \
+                -DBUILD_TESTING=${{ matrix.buildTests }} \
+                -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" \
+                -DCMAKE_INSTALL_PREFIX=_install \
                 ..
         working-directory: _build
       - name: Build
@@ -48,95 +52,10 @@ jobs:
           cmake --build . \
                 --verbose \
                 --target install \
-                --config ${{ matrix.build-type }}
+                --config ${{ matrix.buildType }}
         working-directory: _build
       - name: Test
-        run: ctest -VV --output-on-failure -C ${{ matrix.build-type }}
-        working-directory: _build
-
-  windows-build:
-    strategy:
-      matrix:
-        build:
-          - 1
-        include:
-          - build: 1
-            build-type: Release
-            build-tests: 'ON'
-            build-docs: 'OFF'
-    name: 'Windows 2019 
-      <MSVC 16.4 
-       type=${{ matrix.build-type }}, 
-       tests=${{ matrix.build-tests }}, 
-       docs=${{ matrix.build-docs }}>'
-    runs-on: windows-2019
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create build directories
-        run: |
-          mkdir _build
-          mkdir _install
-        shell: bash
-      - name: Configure
-        run: |
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
-                -DBUILD_TESTING=${{ matrix.build-tests }} \
-                -DBUILD_DOCUMENTATION=${{ matrix.build-docs }} \
-                -DCMAKE_INSTALL_PREFIX=../_install \
-                ..
-        shell: bash
-        working-directory: _build
-      - name: Build
-        run: |
-          cmake --build . \
-                --verbose \
-                --target install \
-                --config ${{ matrix.build-type }}
-        shell: bash
-        working-directory: _build
-     #- name: Test
-     #  run: ctest -VV --output-on-failure -C ${{ matrix.build-type }}
-     #  shell: bash
-     #  working-directory: _build
-
-  macos-build:
-    strategy:
-      matrix:
-        build:
-          - 1
-        include:
-          - build: 1
-            build-type: Release
-            build-tests: 'ON'
-            build-docs: 'OFF'
-    name: 'Mac OSX 10.15
-      <type=${{ matrix.build-type }}, 
-       tests=${{ matrix.build-tests }}, 
-       docs=${{ matrix.build-docs }}>'
-    runs-on: macos-10.15
-    steps:
-      - uses: actions/checkout@v2
-      - name: Create build directories
-        run: |
-          mkdir _build
-          mkdir _install
-      - name: Configure
-        run: |
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
-                -DBUILD_TESTING=${{ matrix.build-tests }} \
-                -DBUILD_DOCUMENTATION=${{ matrix.build-docs }} \
-                -DCMAKE_INSTALL_PREFIX=../_install \
-                 .. \
-        working-directory: _build
-      - name: Build
-        run: |
-          cmake --build . \
-                --verbose \
-                --target install \
-                --config ${{ matrix.build-type }}
-        working-directory: _build
-      - name: Test
-        run: ctest -VV --output-on-failure -C ${{ matrix.build-type }}
+        run: ctest -VV --output-on-failure -C ${{ matrix.buildType }}
         working-directory: _build
 
   # Run automated code formatting checks.

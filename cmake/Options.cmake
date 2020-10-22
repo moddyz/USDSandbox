@@ -1,4 +1,4 @@
 # Project options.
 
 option(BUILD_TESTING "Build & run automated tests." OFF)
-option(BUILD_DOCUMENTATION "Build doxygen documentation." OFF)
+option(USE_PYTHON_3 "Build python bindings for Python 3" OFF)
