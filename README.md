@@ -2,7 +2,7 @@
 
 # USDSandbox
 
-A starting point for a new CMake-based C++ project.
+Sandbox for experimenting with USD (Universal Scene Description).
 
 ## Table of Contents
 

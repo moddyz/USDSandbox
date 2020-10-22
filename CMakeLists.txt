@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.12)
 project(
     USDSandbox
     VERSION 0.0
-    DESCRIPTION "A starting point for a new CMake-based C++ project."
+    DESCRIPTION "Sandbox for experimenting with USD (Universal Scene Description)."
     LANGUAGES CXX
 )
 
