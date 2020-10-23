@@ -54,7 +54,7 @@ if __name__ == "__main__":
     skeletonBinding = UsdSkel.BindingAPI.Apply(skeleton.GetPrim())
     skeletonBinding.CreateAnimationSourceRel().AddTarget(animation.GetPrim().GetPath())
 
-    # Define a Mesh (a right triangle).
+    # Define a Mesh arm.
     mesh = UsdGeom.Mesh.Define(stage, rootPath.AppendChild("mesh"))
     mesh.CreateFaceVertexCountsAttr().Set([4, 4, 4, 4, 4, 4, 4, 4, 4, 4])
     mesh.CreateFaceVertexIndicesAttr().Set([
