@@ -64,3 +64,5 @@ if __name__ == "__main__":
     # Bind Skeleton to animation.
     skeletonBinding = UsdSkel.BindingAPI.Apply(skeleton.GetPrim())
     skeletonBinding.CreateAnimationSourceRel().AddTarget(animation.GetPrim().GetPath())
+
+    print stage.ExportToString()
