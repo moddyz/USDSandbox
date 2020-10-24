@@ -38,12 +38,19 @@ if __name__ == "__main__":
 
     # Define blend shape target B.
     # This offsets the second and third points of the triangle mesh.
+    # This blendshape also has an in-between
     targetB = UsdSkel.BlendShape.Define(stage, mesh.GetPrim().GetPath().AppendChild("targetB"))
     targetB.CreateOffsetsAttr().Set([
-        (2, 0, 0),
-        (-1, -1, -1),
+        (5, 0, 0),
+        (-5, -5, -5),
     ])
     targetB.CreatePointIndicesAttr().Set([1, 2])
+    inbetween0 = targetB.CreateInbetween("inbetween0")
+    inbetween0.SetWeight(0.5)
+    inbetween0.SetOffsets([
+        (0, 0, 0),
+        (0, -3, 0),
+    ])
 
     # Apply BindingAPI onto Mesh, then associate the blend shape targets with the mesh.
     meshBinding = UsdSkel.BindingAPI.Apply(mesh.GetPrim())
@@ -65,4 +72,4 @@ if __name__ == "__main__":
     skeletonBinding = UsdSkel.BindingAPI.Apply(skeleton.GetPrim())
     skeletonBinding.CreateAnimationSourceRel().AddTarget(animation.GetPrim().GetPath())
 
-    print stage.ExportToString()
+    print stage.Export("/tmp/blendShapes.usda")
