@@ -89,4 +89,4 @@ if __name__ == "__main__":
     ])
     meshBinding.CreateGeomBindTransformAttr().Set(Gf.Matrix4d())
 
-    print stage.ExportToString()
+    print(stage.ExportToString())
