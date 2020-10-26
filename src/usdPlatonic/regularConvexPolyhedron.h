@@ -26,18 +26,18 @@
 
 /// \file usdPlatonic/regularConvexPolyhedron.h
 
-#include "pxr/pxr.h"
 #include "./api.h"
-#include "pxr/usd/usdGeom/gprim.h"
+#include "./tokens.h"
+#include "pxr/pxr.h"
 #include "pxr/usd/usd/prim.h"
 #include "pxr/usd/usd/stage.h"
-#include "./tokens.h"
+#include "pxr/usd/usdGeom/gprim.h"
 
 #include "pxr/base/vt/value.h"
 
+#include "pxr/base/gf/matrix4d.h"
 #include "pxr/base/gf/vec3d.h"
 #include "pxr/base/gf/vec3f.h"
-#include "pxr/base/gf/matrix4d.h"
 
 #include "pxr/base/tf/token.h"
 #include "pxr/base/tf/type.h"
@@ -66,16 +66,16 @@ public:
     /// Equivalent to UsdPlatonicRegularConvexPolyhedron::Get(prim.GetStage(), prim.GetPath())
     /// for a \em valid \p prim, but will not immediately throw an error for
     /// an invalid \p prim
-    explicit UsdPlatonicRegularConvexPolyhedron(const UsdPrim& prim=UsdPrim())
-        : UsdGeomGprim(prim)
+    explicit UsdPlatonicRegularConvexPolyhedron( const UsdPrim& prim = UsdPrim() )
+        : UsdGeomGprim( prim )
     {
     }
 
     /// Construct a UsdPlatonicRegularConvexPolyhedron on the prim held by \p schemaObj .
     /// Should be preferred over UsdPlatonicRegularConvexPolyhedron(schemaObj.GetPrim()),
     /// as it preserves SchemaBase state.
-    explicit UsdPlatonicRegularConvexPolyhedron(const UsdSchemaBase& schemaObj)
-        : UsdGeomGprim(schemaObj)
+    explicit UsdPlatonicRegularConvexPolyhedron( const UsdSchemaBase& schemaObj )
+        : UsdGeomGprim( schemaObj )
     {
     }
 
@@ -87,8 +87,7 @@ public:
     /// class and all its ancestor classes.  Does not include attributes that
     /// may be authored by custom/extended methods of the schemas involved.
     USDPLATONIC_API
-    static const TfTokenVector &
-    GetSchemaAttributeNames(bool includeInherited=true);
+    static const TfTokenVector& GetSchemaAttributeNames( bool includeInherited = true );
 
     /// Return a UsdPlatonicRegularConvexPolyhedron holding the prim adhering to this
     /// schema at \p path on \p stage.  If no prim exists at \p path on
@@ -100,9 +99,7 @@ public:
     /// \endcode
     ///
     USDPLATONIC_API
-    static UsdPlatonicRegularConvexPolyhedron
-    Get(const UsdStagePtr &stage, const SdfPath &path);
-
+    static UsdPlatonicRegularConvexPolyhedron Get( const UsdStagePtr& stage, const SdfPath& path );
 
 protected:
     /// Returns the type of schema this class belongs to.
@@ -115,17 +112,17 @@ private:
     // needs to invoke _GetStaticTfType.
     friend class UsdSchemaRegistry;
     USDPLATONIC_API
-    static const TfType &_GetStaticTfType();
+    static const TfType& _GetStaticTfType();
 
     static bool _IsTypedSchema();
 
     // override SchemaBase virtuals.
     USDPLATONIC_API
-    const TfType &_GetTfType() const override;
+    const TfType& _GetTfType() const override;
 
 public:
     // --------------------------------------------------------------------- //
-    // SIDELENGTH 
+    // SIDELENGTH
     // --------------------------------------------------------------------- //
     /// The length of any of the sides.
     ///
@@ -137,21 +134,21 @@ public:
     USDPLATONIC_API
     UsdAttribute GetSideLengthAttr() const;
 
-    /// See GetSideLengthAttr(), and also 
+    /// See GetSideLengthAttr(), and also
     /// \ref Usd_Create_Or_Get_Property for when to use Get vs Create.
     /// If specified, author \p defaultValue as the attribute's default,
     /// sparsely (when it makes sense to do so) if \p writeSparsely is \c true -
     /// the default for \p writeSparsely is \c false.
     USDPLATONIC_API
-    UsdAttribute CreateSideLengthAttr(VtValue const &defaultValue = VtValue(), bool writeSparsely=false) const;
+    UsdAttribute CreateSideLengthAttr( VtValue const& defaultValue = VtValue(), bool writeSparsely = false ) const;
 
 public:
     // ===================================================================== //
-    // Feel free to add custom code below this line, it will be preserved by 
-    // the code generator. 
+    // Feel free to add custom code below this line, it will be preserved by
+    // the code generator.
     //
-    // Just remember to: 
-    //  - Close the class declaration with }; 
+    // Just remember to:
+    //  - Close the class declaration with };
     //  - Close the namespace with PXR_NAMESPACE_CLOSE_SCOPE
     //  - Close the include guard with #endif
     // ===================================================================== //

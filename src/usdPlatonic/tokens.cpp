@@ -25,14 +25,12 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-UsdPlatonicTokensType::UsdPlatonicTokensType() :
-    sideLength("sideLength", TfToken::Immortal),
-    allTokens({
-        sideLength
-    })
+UsdPlatonicTokensType::UsdPlatonicTokensType()
+    : sideLength( "sideLength", TfToken::Immortal )
+    , allTokens( {sideLength} )
 {
 }
 
-TfStaticData<UsdPlatonicTokensType> UsdPlatonicTokens;
+TfStaticData< UsdPlatonicTokensType > UsdPlatonicTokens;
 
 PXR_NAMESPACE_CLOSE_SCOPE

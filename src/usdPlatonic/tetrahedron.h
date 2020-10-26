@@ -26,17 +26,17 @@
 
 /// \file usdPlatonic/tetrahedron.h
 
-#include "pxr/pxr.h"
 #include "./api.h"
 #include "./regularConvexPolyhedron.h"
+#include "pxr/pxr.h"
 #include "pxr/usd/usd/prim.h"
 #include "pxr/usd/usd/stage.h"
 
 #include "pxr/base/vt/value.h"
 
+#include "pxr/base/gf/matrix4d.h"
 #include "pxr/base/gf/vec3d.h"
 #include "pxr/base/gf/vec3f.h"
-#include "pxr/base/gf/matrix4d.h"
 
 #include "pxr/base/tf/token.h"
 #include "pxr/base/tf/type.h"
@@ -65,16 +65,16 @@ public:
     /// Equivalent to UsdPlatonicTetrahedron::Get(prim.GetStage(), prim.GetPath())
     /// for a \em valid \p prim, but will not immediately throw an error for
     /// an invalid \p prim
-    explicit UsdPlatonicTetrahedron(const UsdPrim& prim=UsdPrim())
-        : UsdPlatonicRegularConvexPolyhedron(prim)
+    explicit UsdPlatonicTetrahedron( const UsdPrim& prim = UsdPrim() )
+        : UsdPlatonicRegularConvexPolyhedron( prim )
     {
     }
 
     /// Construct a UsdPlatonicTetrahedron on the prim held by \p schemaObj .
     /// Should be preferred over UsdPlatonicTetrahedron(schemaObj.GetPrim()),
     /// as it preserves SchemaBase state.
-    explicit UsdPlatonicTetrahedron(const UsdSchemaBase& schemaObj)
-        : UsdPlatonicRegularConvexPolyhedron(schemaObj)
+    explicit UsdPlatonicTetrahedron( const UsdSchemaBase& schemaObj )
+        : UsdPlatonicRegularConvexPolyhedron( schemaObj )
     {
     }
 
@@ -86,8 +86,7 @@ public:
     /// class and all its ancestor classes.  Does not include attributes that
     /// may be authored by custom/extended methods of the schemas involved.
     USDPLATONIC_API
-    static const TfTokenVector &
-    GetSchemaAttributeNames(bool includeInherited=true);
+    static const TfTokenVector& GetSchemaAttributeNames( bool includeInherited = true );
 
     /// Return a UsdPlatonicTetrahedron holding the prim adhering to this
     /// schema at \p path on \p stage.  If no prim exists at \p path on
@@ -99,8 +98,7 @@ public:
     /// \endcode
     ///
     USDPLATONIC_API
-    static UsdPlatonicTetrahedron
-    Get(const UsdStagePtr &stage, const SdfPath &path);
+    static UsdPlatonicTetrahedron Get( const UsdStagePtr& stage, const SdfPath& path );
 
     /// Attempt to ensure a \a UsdPrim adhering to this schema at \p path
     /// is defined (according to UsdPrim::IsDefined()) on this stage.
@@ -125,8 +123,7 @@ public:
     /// the opinion at the current EditTarget.
     ///
     USDPLATONIC_API
-    static UsdPlatonicTetrahedron
-    Define(const UsdStagePtr &stage, const SdfPath &path);
+    static UsdPlatonicTetrahedron Define( const UsdStagePtr& stage, const SdfPath& path );
 
 protected:
     /// Returns the type of schema this class belongs to.
@@ -139,21 +136,21 @@ private:
     // needs to invoke _GetStaticTfType.
     friend class UsdSchemaRegistry;
     USDPLATONIC_API
-    static const TfType &_GetStaticTfType();
+    static const TfType& _GetStaticTfType();
 
     static bool _IsTypedSchema();
 
     // override SchemaBase virtuals.
     USDPLATONIC_API
-    const TfType &_GetTfType() const override;
+    const TfType& _GetTfType() const override;
 
 public:
     // ===================================================================== //
-    // Feel free to add custom code below this line, it will be preserved by 
-    // the code generator. 
+    // Feel free to add custom code below this line, it will be preserved by
+    // the code generator.
     //
-    // Just remember to: 
-    //  - Close the class declaration with }; 
+    // Just remember to:
+    //  - Close the class declaration with };
     //  - Close the namespace with PXR_NAMESPACE_CLOSE_SCOPE
     //  - Close the include guard with #endif
     // ===================================================================== //

@@ -8,6 +8,6 @@ PXR_NAMESPACE_USING_DIRECTIVE
 
 TF_WRAP_MODULE
 {
-    TF_WRAP(UsdPlatonicRegularConvexPolyhedron);
-    TF_WRAP(UsdPlatonicTetrahedron);
+    TF_WRAP( UsdPlatonicRegularConvexPolyhedron );
+    TF_WRAP( UsdPlatonicTetrahedron );
 }

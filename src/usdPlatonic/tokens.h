@@ -27,20 +27,19 @@
 /// \file usdPlatonic/tokens.h
 
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-// 
+//
 // This is an automatically generated file (by usdGenSchema.py).
 // Do not hand-edit!
-// 
+//
 // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-#include "pxr/pxr.h"
 #include "./api.h"
 #include "pxr/base/tf/staticData.h"
 #include "pxr/base/tf/token.h"
+#include "pxr/pxr.h"
 #include <vector>
 
 PXR_NAMESPACE_OPEN_SCOPE
-
 
 /// \class UsdPlatonicTokensType
 ///
@@ -60,21 +59,22 @@ PXR_NAMESPACE_OPEN_SCOPE
 /// \code
 ///     gprim.GetMyTokenValuedAttr().Set(UsdPlatonicTokens->sideLength);
 /// \endcode
-struct UsdPlatonicTokensType {
+struct UsdPlatonicTokensType
+{
     USDPLATONIC_API UsdPlatonicTokensType();
     /// \brief "sideLength"
-    /// 
+    ///
     /// UsdPlatonicRegularConvexPolyhedron
     const TfToken sideLength;
     /// A vector of all of the tokens listed above.
-    const std::vector<TfToken> allTokens;
+    const std::vector< TfToken > allTokens;
 };
 
 /// \var UsdPlatonicTokens
 ///
 /// A global variable with static, efficient \link TfToken TfTokens\endlink
 /// for use in all public USD API.  \sa UsdPlatonicTokensType
-extern USDPLATONIC_API TfStaticData<UsdPlatonicTokensType> UsdPlatonicTokens;
+extern USDPLATONIC_API TfStaticData< UsdPlatonicTokensType > UsdPlatonicTokens;
 
 PXR_NAMESPACE_CLOSE_SCOPE
 

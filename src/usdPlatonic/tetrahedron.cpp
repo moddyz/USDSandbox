@@ -25,23 +25,22 @@
 #include "pxr/usd/usd/schemaRegistry.h"
 #include "pxr/usd/usd/typed.h"
 
-#include "pxr/usd/sdf/types.h"
 #include "pxr/usd/sdf/assetPath.h"
+#include "pxr/usd/sdf/types.h"
 
 PXR_NAMESPACE_OPEN_SCOPE
 
 // Register the schema with the TfType system.
-TF_REGISTRY_FUNCTION(TfType)
+TF_REGISTRY_FUNCTION( TfType )
 {
-    TfType::Define<UsdPlatonicTetrahedron,
-        TfType::Bases< UsdPlatonicRegularConvexPolyhedron > >();
-    
+    TfType::Define< UsdPlatonicTetrahedron, TfType::Bases< UsdPlatonicRegularConvexPolyhedron > >();
+
     // Register the usd prim typename as an alias under UsdSchemaBase. This
     // enables one to call
     // TfType::Find<UsdSchemaBase>().FindDerivedByName("Tetrahedron")
     // to find TfType<UsdPlatonicTetrahedron>, which is how IsA queries are
     // answered.
-    TfType::AddAlias<UsdSchemaBase, UsdPlatonicTetrahedron>("Tetrahedron");
+    TfType::AddAlias< UsdSchemaBase, UsdPlatonicTetrahedron >( "Tetrahedron" );
 }
 
 /* virtual */
@@ -50,67 +49,61 @@ UsdPlatonicTetrahedron::~UsdPlatonicTetrahedron()
 }
 
 /* static */
-UsdPlatonicTetrahedron
-UsdPlatonicTetrahedron::Get(const UsdStagePtr &stage, const SdfPath &path)
+UsdPlatonicTetrahedron UsdPlatonicTetrahedron::Get( const UsdStagePtr& stage, const SdfPath& path )
 {
-    if (!stage) {
-        TF_CODING_ERROR("Invalid stage");
+    if ( !stage )
+    {
+        TF_CODING_ERROR( "Invalid stage" );
         return UsdPlatonicTetrahedron();
     }
-    return UsdPlatonicTetrahedron(stage->GetPrimAtPath(path));
+    return UsdPlatonicTetrahedron( stage->GetPrimAtPath( path ) );
 }
 
 /* static */
-UsdPlatonicTetrahedron
-UsdPlatonicTetrahedron::Define(
-    const UsdStagePtr &stage, const SdfPath &path)
+UsdPlatonicTetrahedron UsdPlatonicTetrahedron::Define( const UsdStagePtr& stage, const SdfPath& path )
 {
-    static TfToken usdPrimTypeName("Tetrahedron");
-    if (!stage) {
-        TF_CODING_ERROR("Invalid stage");
+    static TfToken usdPrimTypeName( "Tetrahedron" );
+    if ( !stage )
+    {
+        TF_CODING_ERROR( "Invalid stage" );
         return UsdPlatonicTetrahedron();
     }
-    return UsdPlatonicTetrahedron(
-        stage->DefinePrim(path, usdPrimTypeName));
+    return UsdPlatonicTetrahedron( stage->DefinePrim( path, usdPrimTypeName ) );
 }
 
 /* virtual */
-UsdSchemaType UsdPlatonicTetrahedron::_GetSchemaType() const {
+UsdSchemaType UsdPlatonicTetrahedron::_GetSchemaType() const
+{
     return UsdPlatonicTetrahedron::schemaType;
 }
 
 /* static */
-const TfType &
-UsdPlatonicTetrahedron::_GetStaticTfType()
+const TfType& UsdPlatonicTetrahedron::_GetStaticTfType()
 {
-    static TfType tfType = TfType::Find<UsdPlatonicTetrahedron>();
+    static TfType tfType = TfType::Find< UsdPlatonicTetrahedron >();
     return tfType;
 }
 
 /* static */
-bool 
-UsdPlatonicTetrahedron::_IsTypedSchema()
+bool UsdPlatonicTetrahedron::_IsTypedSchema()
 {
-    static bool isTyped = _GetStaticTfType().IsA<UsdTyped>();
+    static bool isTyped = _GetStaticTfType().IsA< UsdTyped >();
     return isTyped;
 }
 
 /* virtual */
-const TfType &
-UsdPlatonicTetrahedron::_GetTfType() const
+const TfType& UsdPlatonicTetrahedron::_GetTfType() const
 {
     return _GetStaticTfType();
 }
 
 /*static*/
-const TfTokenVector&
-UsdPlatonicTetrahedron::GetSchemaAttributeNames(bool includeInherited)
+const TfTokenVector& UsdPlatonicTetrahedron::GetSchemaAttributeNames( bool includeInherited )
 {
     static TfTokenVector localNames;
-    static TfTokenVector allNames =
-        UsdPlatonicRegularConvexPolyhedron::GetSchemaAttributeNames(true);
+    static TfTokenVector allNames = UsdPlatonicRegularConvexPolyhedron::GetSchemaAttributeNames( true );
 
-    if (includeInherited)
+    if ( includeInherited )
         return allNames;
     else
         return localNames;
