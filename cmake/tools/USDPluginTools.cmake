@@ -2,10 +2,12 @@
 # Public-facing convenience functions & macros for building USD plugin(s).
 #
 
-# Common USD build variable(s).
-set(USD_LIB_INSTALL_DIR "lib")
-set(USD_PLUGIN_INSTALL_DIR "plugin")
-set(USD_PLUG_INFO_RESOURCE_DIR "resources")
+# Exposed USD variable(s) for installation.
+set(USD_LIB_DIR "lib")
+set(USD_PLUGIN_DIR "plugin")
+set(USD_PYTHON_DIR "python")
+set(USD_PLUG_INFO_RESOURCES_DIR "resources")
+set(USD_PLUG_INFO_ROOT_DIR "usd")
 
 # Build a shared library, with intention to be used as a library dependency.
 macro(usd_shared_library NAME)
@@ -27,6 +29,11 @@ endmacro(usd_plugin)
 
 # Adds a USD-based python test to be run.
 function(usd_python_test LIBRARY_NAME PYTHON_FILE)
+    if (NOT ENABLE_PYTHON_SUPPORT)
+        message(FATAL_ERROR
+                "Cannot use usd_python_test without python support.  Please configure with ENABLE_PYTHON_SUPPORT=ON.")
+    endif()
+
     get_filename_component(TEST_NAME ${PYTHON_FILE} NAME_WE)
     set(PYTHON_TEST_TARGET ${LIBRARY_NAME}_${TEST_NAME})
     add_test(
@@ -37,7 +44,7 @@ function(usd_python_test LIBRARY_NAME PYTHON_FILE)
     set_tests_properties(${PYTHON_TEST_TARGET}
         PROPERTIES
             ENVIRONMENT
-            "PYTHONPATH=${PROJECT_BINARY_DIR}/${USD_LIB_INSTALL_DIR}/python:${USD_ROOT}/${USD_LIB_INSTALL_DIR}/python:$ENV{PYTHONPATH};PXR_PLUGINPATH_NAME=${PROJECT_BINARY_DIR}/${USD_LIB_INSTALL_DIR}/usd:${PROJECT_BINARY_DIR}/${USD_PLUGIN_INSTALL_DIR}/usd:$ENV{PXR_PLUGINPATH_NAME}"
+            "PYTHONPATH=${PROJECT_BINARY_DIR}/${USD_LIB_DIR}/python:${USD_ROOT}/${USD_LIB_DIR}/python:$ENV{PYTHONPATH};PXR_PLUGINPATH_NAME=${PROJECT_BINARY_DIR}/${USD_LIB_DIR}/${USD_PLUG_INFO_ROOT_DIR}:${PROJECT_BINARY_DIR}/${USD_PLUGIN_DIR}/${USD_PLUG_INFO_ROOT_DIR}:$ENV{PXR_PLUGINPATH_NAME}"
     )
 endfunction()
 
@@ -53,12 +60,14 @@ function(_usd_library NAME)
     )
 
     set(multiValueArgs
+        PUBLIC_HEADERS_INSTALL_PREFIX
         PUBLIC_HEADERS
         PUBLIC_CLASSES
         CPPFILES
         LIBRARIES
         INCLUDE_DIRS
         RESOURCE_FILES
+        PYTHON_INSTALL_PREFIX
         PYTHON_FILES
         PYTHON_CPPFILES
         PYMODULE_CPPFILES
@@ -81,10 +90,16 @@ function(_usd_library NAME)
                 "Building library type '${args_TYPE}' not supported.")
     endif()
 
+    # Plugins do not provide public headers (nor public classes).
+    if (args_TYPE STREQUAL "PLUGIN" AND (args_PUBLIC_HEADERS OR args_PUBLIC_CLASSES))
+        message(FATAL_ERROR
+                "'${args_TYPE}' library type does not support public headers nor classes.")
+    endif()
+
     # Does not make sense to build a companion python module for a "plugin".
     if (args_TYPE STREQUAL "PLUGIN" AND args_PYMODULE_CPPFILES)
         message(FATAL_ERROR
-                "Cannot build '${args_TYPE}' library type with associated python module.")
+                "'${args_TYPE}' library type does not support associated python module.")
     endif()
 
     # Expand class names to .cpp & .h files.
@@ -104,7 +119,13 @@ function(_usd_library NAME)
     # Build C++ library.
     #
 
-    _install_public_headers(${NAME}
+    if (args_PUBLIC_HEADERS_INSTALL_PREFIX)
+        set(PUBLIC_HEADERS_INSTALL_PREFIX ${args_PUBLIC_HEADERS_INSTALL_PREFIX}/${NAME})
+    else()
+        set(PUBLIC_HEADERS_INSTALL_PREFIX ${NAME})
+    endif()
+
+    _install_public_headers(${PUBLIC_HEADERS_INSTALL_PREFIX}
         PUBLIC_HEADERS
             ${args_PUBLIC_HEADERS}
     )
@@ -141,7 +162,7 @@ function(_usd_library NAME)
     #
     # LIBRARY_FILE_PREFIX is the filename prefix. ("lib" on Linux)
     if (args_TYPE STREQUAL "PLUGIN")
-        set(LIBRARY_INSTALL_PREFIX ${USD_PLUGIN_INSTALL_DIR})
+        set(LIBRARY_INSTALL_PREFIX ${USD_PLUGIN_DIR})
         set(LIBRARY_FILE_PREFIX "")
 
         # Install the plugin.
@@ -152,7 +173,7 @@ function(_usd_library NAME)
             LIBRARY DESTINATION ${LIBRARY_INSTALL_PREFIX}
         )
     else()
-        set(LIBRARY_INSTALL_PREFIX ${USD_LIB_INSTALL_DIR})
+        set(LIBRARY_INSTALL_PREFIX ${USD_LIB_DIR})
         set(LIBRARY_FILE_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
 
         # Install the library and export it as an public target.
@@ -188,7 +209,11 @@ function(_usd_library NAME)
         _usd_get_python_module_name(${NAME} PYTHON_MODULE_NAME)
 
         # Construct the installation prefix for the python modules & files.
-        set(PYTHON_INSTALL_PREFIX ${LIBRARY_INSTALL_PREFIX}/python/${PYTHON_MODULE_NAME})
+        if (args_PYTHON_INSTALL_PREFIX)
+            set(PYTHON_INSTALL_PREFIX ${LIBRARY_INSTALL_PREFIX}/${USD_PYTHON_DIR}/${args_PYTHON_INSTALL_PREFIX}/${PYTHON_MODULE_NAME})
+        else()
+            set(PYTHON_INSTALL_PREFIX ${LIBRARY_INSTALL_PREFIX}/${USD_PYTHON_DIR}/${PYTHON_MODULE_NAME})
+        endif()
 
         #
         # Python module / bindings.
@@ -288,7 +313,7 @@ function(_usd_library NAME)
     #
 
     # Plugin resources will be installed as a 'usd' subdir under the library install location.
-    set(RESOURCES_INSTALL_PREFIX ${LIBRARY_INSTALL_PREFIX}/usd)
+    set(RESOURCES_INSTALL_PREFIX ${LIBRARY_INSTALL_PREFIX}/${USD_PLUG_INFO_ROOT_DIR})
 
     foreach(resourceFile ${args_RESOURCE_FILES})
 
@@ -309,7 +334,7 @@ function(_usd_library NAME)
         if (BUILD_TESTING)
             file(
                 COPY ${resourceFile}
-                DESTINATION ${PROJECT_BINARY_DIR}/${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCE_DIR}
+                DESTINATION ${PROJECT_BINARY_DIR}/${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCES_DIR}
             )
         endif()
 
@@ -318,7 +343,7 @@ function(_usd_library NAME)
             FILES
                 ${resourceFile}
             DESTINATION
-                ${CMAKE_INSTALL_PREFIX}/${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCE_DIR}
+                ${CMAKE_INSTALL_PREFIX}/${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCES_DIR}
         )
     endforeach()
 
@@ -346,7 +371,7 @@ endfunction()
 function(_usd_plug_info_subst LIBRARY_TARGET RESOURCE_TO_LIBRARY_PATH PLUG_INFO_PATH)
     set(PLUG_INFO_ROOT "..")
     set(PLUG_INFO_LIBRARY_PATH ${RESOURCE_TO_LIBRARY_PATH})
-    set(PLUG_INFO_RESOURCE_PATH ${USD_PLUG_INFO_RESOURCE_DIR})
+    set(PLUG_INFO_RESOURCE_PATH ${USD_PLUG_INFO_RESOURCES_DIR})
     configure_file(
         ${PLUG_INFO_PATH}
         ${CMAKE_CURRENT_BINARY_DIR}/${PLUG_INFO_PATH}
