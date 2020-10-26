@@ -1,5 +1,4 @@
-# Discovery and exposure of the dependencies of USDPluginExamples,
-# including USD, TBB, Boost, Python.
+# Discovery of USDSandbox dependencies.
 
 # Boost & python.
 if (ENABLE_PYTHON_SUPPORT)
