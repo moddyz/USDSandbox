@@ -16,4 +16,4 @@ if __name__ == "__main__":
     refWorldB.GetReferences().AddInternalReference("/World")
     refWorldB.SetInstanceable(True)
 
-    print stage.GetRootLayer().ExportToString()
+    print(stage.GetRootLayer().ExportToString())
