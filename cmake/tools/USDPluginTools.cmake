@@ -1,15 +1,19 @@
-#
+# ============================================================================
 # Public-facing convenience functions & macros for building USD plugin(s).
-#
+# ============================================================================
+
+# To gain access to standard install directory variables such as CMAKE_INSTALL_LIBDIR.
+include(GNUInstallDirs)
 
 # Exposed USD variable(s) for installation.
-set(USD_LIB_DIR "lib")
+# XXX: We can hide these if we provide a more convenient way to install the
+# root plugInfo.json(s) and __init__.py files.
 set(USD_PLUGIN_DIR "plugin")
 set(USD_PYTHON_DIR "python")
 set(USD_PLUG_INFO_RESOURCES_DIR "resources")
 set(USD_PLUG_INFO_ROOT_DIR "usd")
 
-# Build a shared library, with intention to be used as a library dependency.
+# Build a USD shared library.
 macro(usd_shared_library NAME)
     _usd_library(${NAME}
         TYPE
@@ -18,7 +22,7 @@ macro(usd_shared_library NAME)
     )
 endmacro(usd_shared_library)
 
-# Builds a shared library, with no intention for usage as a library dependency.
+# Builds a USD plugin.
 macro(usd_plugin NAME)
     _usd_library(${NAME}
         TYPE
@@ -27,31 +31,41 @@ macro(usd_plugin NAME)
     )
 endmacro(usd_plugin)
 
-# Adds a USD-based python test to be run.
-function(usd_python_test LIBRARY_NAME PYTHON_FILE)
+# Adds a USD-based python test which is executed by CTest.
+# The python file is simply executed by the python interpreter
+# with no special arguments.
+function(usd_python_test TEST_PREFIX PYTHON_FILE)
     if (NOT ENABLE_PYTHON_SUPPORT)
         message(FATAL_ERROR
                 "Cannot use usd_python_test without python support.  Please configure with ENABLE_PYTHON_SUPPORT=ON.")
     endif()
 
+    # Create a test target based on a named test prefix
+    # and the python file name.
     get_filename_component(TEST_NAME ${PYTHON_FILE} NAME_WE)
-    set(PYTHON_TEST_TARGET ${LIBRARY_NAME}_${TEST_NAME})
+    set(PYTHON_TEST_TARGET ${TEST_PREFIX}_${TEST_NAME})
     add_test(
         NAME ${PYTHON_TEST_TARGET}
         COMMAND ${PYTHON_EXECUTABLE} ${PYTHON_FILE}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
+
+    # Set-up runtime environment variables for the test.
+    # The paths refer to the build tree (which mirrors the final installation).
     set_tests_properties(${PYTHON_TEST_TARGET}
         PROPERTIES
             ENVIRONMENT
-            "PYTHONPATH=${PROJECT_BINARY_DIR}/${USD_LIB_DIR}/python:${USD_ROOT}/${USD_LIB_DIR}/python:$ENV{PYTHONPATH};PXR_PLUGINPATH_NAME=${PROJECT_BINARY_DIR}/${USD_LIB_DIR}/${USD_PLUG_INFO_ROOT_DIR}:${PROJECT_BINARY_DIR}/${USD_PLUGIN_DIR}/${USD_PLUG_INFO_ROOT_DIR}:$ENV{PXR_PLUGINPATH_NAME}"
+            "PYTHONPATH=${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/python:${USD_ROOT}/${CMAKE_INSTALL_LIBDIR}/python:$ENV{PYTHONPATH};PXR_PLUGINPATH_NAME=${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/${USD_PLUG_INFO_ROOT_DIR}:${PROJECT_BINARY_DIR}/${USD_PLUGIN_DIR}/${USD_PLUG_INFO_ROOT_DIR}:$ENV{PXR_PLUGINPATH_NAME}"
     )
 endfunction()
 
-# Convenience function for building a library against USD.
+# Internal function for building a library against USD.
 #
-# This function interface is based on USD's pxr_library, but currently only exposes a subset
-# of features.
+# The function interface is based on USD's pxr_library, but currently only exposes a subset
+# of features.  It also exposes the *_INSTALL_PREFIX arguments which are not part of the pxr macros.
+#
+# The difference between PYTHON_CPPFILES and PYMODULE_CPPFILES is that the former is built as part
+# of the C++ library (if python support is enabled, of course).
 function(_usd_library NAME)
     set(options)
 
@@ -119,22 +133,43 @@ function(_usd_library NAME)
     # Build C++ library.
     #
 
+    # Determine public header install location.
     if (args_PUBLIC_HEADERS_INSTALL_PREFIX)
         set(PUBLIC_HEADERS_INSTALL_PREFIX ${args_PUBLIC_HEADERS_INSTALL_PREFIX}/${NAME})
     else()
         set(PUBLIC_HEADERS_INSTALL_PREFIX ${NAME})
     endif()
 
-    _install_public_headers(${PUBLIC_HEADERS_INSTALL_PREFIX}
-        PUBLIC_HEADERS
-            ${args_PUBLIC_HEADERS}
+    # Copy public headers into build tree.
+    file(
+        COPY ${args_PUBLIC_HEADERS}
+        DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}/${PUBLIC_HEADERS_INSTALL_PREFIX}
     )
 
-    # Add a new shared library target.
+    # Install public headers.
+    install(
+        FILES ${args_PUBLIC_HEADERS}
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PUBLIC_HEADERS_INSTALL_PREFIX}
+    )
+
+    # Convert "PLUGIN" into "MODULE".
+    # (MODULE is CMake terminology for a dynamic lib only intended to be dlopen'ed at runtime).
+    if (args_TYPE STREQUAL "PLUGIN")
+        set(LIBRARY_TYPE "MODULE")
+    else()
+        set(LIBRARY_TYPE ${args_TYPE})
+    endif()
+
+    # Add a new library target.
     add_library(${NAME}
-        SHARED
-        ${args_CPPFILES}
-        ${args_PUBLIC_HEADERS}
+        ${LIBRARY_TYPE}
+    )
+
+    # Add sources for building the target.
+    target_sources(${NAME}
+        PRIVATE
+            ${args_CPPFILES}
+            ${args_PUBLIC_HEADERS}
     )
 
     # Apply common compiler properties, and include path properties.
@@ -173,8 +208,16 @@ function(_usd_library NAME)
             LIBRARY DESTINATION ${LIBRARY_INSTALL_PREFIX}
         )
     else()
-        set(LIBRARY_INSTALL_PREFIX ${USD_LIB_DIR})
+        set(LIBRARY_INSTALL_PREFIX ${CMAKE_INSTALL_LIBDIR})
         set(LIBRARY_FILE_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+
+        # Setup SOVERSION & VERSION properties to create
+        # NAMELINK, SONAME, and actual library with full version suffix.
+        set_target_properties(${NAME}
+            PROPERTIES
+                SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}
+                VERSION ${CMAKE_PROJECT_VERSION}
+        )
 
         # Install the library and export it as an public target.
         install(
@@ -200,7 +243,7 @@ function(_usd_library NAME)
     )
 
     # Compose the full name of the library.
-    # This will be used in the plugInfo.json variable substitution.
+    # This will be used when performing variable substition on the plugInfo.json resource file.
     set(LIBRARY_FILE_NAME ${LIBRARY_FILE_PREFIX}${NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     if (ENABLE_PYTHON_SUPPORT)
@@ -224,9 +267,14 @@ function(_usd_library NAME)
             # Target name.
             set(PYLIB_NAME "_${NAME}")
 
-            # Add a new shared library target.
+            # Add a library target.
             add_library(${PYLIB_NAME}
-                SHARED
+                MODULE
+            )
+
+            # Add sources for building the target.
+            target_sources(${PYLIB_NAME}
+                PRIVATE
                     ${args_PYMODULE_CPPFILES}
             )
 
@@ -276,7 +324,7 @@ function(_usd_library NAME)
                 RENAME
                     ${PYLIB_NAME}.so
                 DESTINATION
-                    ${CMAKE_INSTALL_PREFIX}/${PYTHON_INSTALL_PREFIX}
+                    ${PYTHON_INSTALL_PREFIX}
             )
         endif()
 
@@ -303,7 +351,7 @@ function(_usd_library NAME)
                 FILES
                     ${args_PYTHON_FILES}
                 DESTINATION
-                    ${CMAKE_INSTALL_PREFIX}/${PYTHON_INSTALL_PREFIX}
+                    ${PYTHON_INSTALL_PREFIX}
             )
         endif()
     endif()
@@ -343,7 +391,7 @@ function(_usd_library NAME)
             FILES
                 ${resourceFile}
             DESTINATION
-                ${CMAKE_INSTALL_PREFIX}/${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCES_DIR}
+                ${RESOURCES_INSTALL_PREFIX}/${NAME}/${USD_PLUG_INFO_RESOURCES_DIR}
         )
     endforeach()
 
@@ -366,8 +414,7 @@ function(_usd_get_python_module_name LIBRARY_FILENAME MODULE_NAME)
     )
 endfunction()
 
-# Configures a plugInfo.json files by substituting a series of variables
-# in the file (produced by usdGenSchema).
+# Performs variable substitution in a plugInfo.json file.
 function(_usd_plug_info_subst LIBRARY_TARGET RESOURCE_TO_LIBRARY_PATH PLUG_INFO_PATH)
     set(PLUG_INFO_ROOT "..")
     set(PLUG_INFO_LIBRARY_PATH ${RESOURCE_TO_LIBRARY_PATH})
@@ -378,7 +425,7 @@ function(_usd_plug_info_subst LIBRARY_TARGET RESOURCE_TO_LIBRARY_PATH PLUG_INFO_
     )
 endfunction()
 
-# Utility for applying common C++ library properties.
+# Common target-specific properties to apply to library targets.
 function(
     _set_library_properties
     TARGET_NAME
@@ -411,13 +458,13 @@ function(
     # Exported include paths for this target.
     target_include_directories(${TARGET_NAME}
         INTERFACE
-            $<INSTALL_INTERFACE:include>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
     # Project includes for building against.
     target_include_directories(${TARGET_NAME}
         PRIVATE
-            $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
     # Setup include path for binary dir.
@@ -428,33 +475,3 @@ function(
             ${args_INCLUDE_DIRS}
     )
 endfunction() # _set_library_properties
-
-# Utility function for deploying public headers.
-function(
-    _install_public_headers
-    LIBRARY_NAME
-)
-    set(options)
-    set(oneValueArgs)
-    set(multiValueArgs
-        PUBLIC_HEADERS
-    )
-
-    cmake_parse_arguments(
-        args
-        "${options}"
-        "${oneValueArgs}"
-        "${multiValueArgs}"
-        ${ARGN}
-    )
-
-    file(
-        COPY ${args_PUBLIC_HEADERS}
-        DESTINATION ${CMAKE_BINARY_DIR}/include/${LIBRARY_NAME}
-    )
-
-    install(
-        FILES ${args_PUBLIC_HEADERS}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${LIBRARY_NAME}
-    )
-endfunction() # _install_public_headers
