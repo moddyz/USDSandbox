@@ -8,16 +8,14 @@ Sandbox for experimenting with USD (Universal Scene Description).
 
 - [Dependencies](#dependencies)
 - [Building](#building)
-- [Template usage](#template-usage)
 
 ### Dependencies
 
 The following dependencies are mandatory:
 - C++ compiler
 - [CMake](https://cmake.org/documentation/) (3.12 or greater)
-- [Boost](https://boost.org)
-- [Intel TBB](https://www.threadingbuildingblocks.org/)
 - [USD](https://github.com/pixaranimationstudios/USD) (20.11)
+- [Boost](https://boost.org) & [Intel TBB](https://www.threadingbuildingblocks.org/) (USD Dependencies)
 
 ## Building
 
