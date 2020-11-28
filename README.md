@@ -9,7 +9,7 @@ Sandbox for experimenting with USD (Universal Scene Description).
 - [Dependencies](#dependencies)
 - [Building](#building)
 
-### Dependencies
+## Dependencies
 
 The following dependencies are mandatory:
 - C++ compiler
