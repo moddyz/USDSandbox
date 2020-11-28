@@ -27,4 +27,4 @@ if __name__ == "__main__":
         (30, 30, 30),
     ])
 
-    stage.Export("pointInstancing.usda")
+    #stage.Export("pointInstancing.usda")
