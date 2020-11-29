@@ -54,7 +54,7 @@ def AuthorAnimatedReferencedModel(animPath, modelPath):
     # Save work.
     stage.Save()
 
-    # stage.Export("spinningCube.usda")
+    # stage.GetRootLayer().Export("spinningCube.usda")
 
 
 def AuthorMultipleAnimWithOffsets(multiAnimPath, animPath):
@@ -95,7 +95,7 @@ def AuthorMultipleAnimWithOffsets(multiAnimPath, animPath):
     # Save work.
     stage.Save()
 
-    #stage.Export("spinningCubes.usda")
+    # stage.GetRootLayer().Export("spinningCubes.usda")
 
 
 if __name__ == "__main__":

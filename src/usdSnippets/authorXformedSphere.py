@@ -16,3 +16,5 @@ if __name__ == "__main__":
     sphere.AddTranslateOp().Set((10, 20, 30))
     sphere.AddRotateXYZOp().Set((50, 30, 30))
     sphere.AddScaleOp().Set((2, 2, 2))
+
+    # stage.GetRootLayer().Export("xformedSphere.usda")

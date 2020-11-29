@@ -27,4 +27,4 @@ if __name__ == "__main__":
     refWorldB.SetInstanceable(True)
     UsdGeom.XformCommonAPI(refWorldB).SetTranslate((4, 0, 0))
 
-    #stage.Export("implicitInstancing.usda")
+    # stage.GetRootLayer().Export("implicitInstancing.usda")

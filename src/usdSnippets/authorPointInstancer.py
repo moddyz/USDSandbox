@@ -10,7 +10,7 @@ if __name__ == "__main__":
     # Create a new stage.
     stage = Usd.Stage.CreateInMemory()
 
-    # Define a top-level xform, with a child sphere.
+    # Define a top-level xform, with child sphere & cube.
     scope = UsdGeom.Scope.Define(stage, '/World')
     scope.CreateVisibilityAttr().Set(UsdGeom.Tokens.invisible)
     sphere = UsdGeom.Sphere.Define(stage, '/World/Sphere')
@@ -32,4 +32,4 @@ if __name__ == "__main__":
         (30, 30, 30),
     ])
 
-    #stage.Export("pointInstancing.usda")
+    # stage.GetRootLayer().Export("pointInstancing.usda")
