@@ -1,3 +1,7 @@
+"""
+Testing UsdSkelAnimMapper's capabilities.
+"""
+
 from pxr import UsdSkel, Vt
 
 

@@ -1,3 +1,8 @@
+"""
+Example of authoring a collection with include and exclude paths,
+and querying membership information.
+"""
+
 from pxr import Usd, UsdGeom, Sdf
 
 

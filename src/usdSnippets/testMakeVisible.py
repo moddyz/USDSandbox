@@ -1,3 +1,7 @@
+"""
+Testing UsdGeomImageable's MakeVisible and MakeInvisible utilities.
+"""
+
 from pxr import Usd, UsdGeom, Gf
 
 

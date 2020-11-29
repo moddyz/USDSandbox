@@ -1,3 +1,10 @@
+"""
+This is based on the "Transformations, Time-sampled Animation, and Layer Offsets" USD tutorial:
+https://graphics.pixar.com/usd/docs/567231471.html
+
+... but with a cube.
+"""
+
 from pxr import Usd, UsdGeom, Sdf
 
 import os
@@ -94,7 +101,7 @@ def AuthorMultipleAnimWithOffsets(multiAnimPath, animPath):
 if __name__ == "__main__":
 
     with TemporaryDirectory() as tempDir:
-        # Author static cube.
+        # Author static model.
         modelPath = os.path.join(tempDir, "model.usda")
         AuthorStaticModel(modelPath)
 

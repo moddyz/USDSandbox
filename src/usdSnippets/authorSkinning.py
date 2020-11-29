@@ -1,7 +1,9 @@
-from pxr import Gf, Sdf, Usd, UsdGeom, UsdSkel
+"""
+This snippet authors the example scene provided at:
+https://graphics.pixar.com/usd/docs/api/_usd_skel__schema_overview.html#UsdSkel_SchemaOverview_SkinningAnArm
+"""
 
-# This code authors the example scene provided at:
-# https://graphics.pixar.com/usd/docs/api/_usd_skel__schema_overview.html#UsdSkel_SchemaOverview_SkinningAnArm
+from pxr import Gf, Sdf, Usd, UsdGeom, UsdSkel
 
 if __name__ == "__main__":
     # Create a new stage.

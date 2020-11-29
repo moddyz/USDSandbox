@@ -1,3 +1,8 @@
+"""
+A basic example of authoring a PointInstancer which instances
+a sphere and cube in multiple locations of the scene.
+"""
+
 from pxr import Usd, UsdGeom
 
 

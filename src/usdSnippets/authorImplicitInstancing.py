@@ -1,3 +1,9 @@
+
+"""
+A basic example of authoring blend shape animation applied to a
+triangular mesh with UsdSkel.
+"""
+
 from pxr import Usd, UsdGeom
 
 

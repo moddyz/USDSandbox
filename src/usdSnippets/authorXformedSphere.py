@@ -1,3 +1,7 @@
+"""
+A basic example of transforming a sphere.
+"""
+
 from pxr import Usd, UsdGeom, Gf
 
 
