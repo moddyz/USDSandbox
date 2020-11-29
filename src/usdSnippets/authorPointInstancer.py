@@ -32,4 +32,4 @@ if __name__ == "__main__":
         (30, 30, 30),
     ])
 
-    # stage.GetRootLayer().Export("pointInstancing.usda")
+    print stage.GetRootLayer().ExportToString()

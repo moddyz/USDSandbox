@@ -30,4 +30,4 @@ if __name__ == "__main__":
     # the entire timecode range of this stage.
     sphere.MakeInvisible(2)
 
-    # stage.Export("makeVisibility.usda")
+    print stage.GetRootLayer().ExportToString()

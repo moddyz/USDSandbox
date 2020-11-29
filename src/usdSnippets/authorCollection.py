@@ -37,4 +37,4 @@ if __name__ == "__main__":
     ]
     assert set(expectedPaths) == set(collection.ComputeIncludedPaths(query, stage))
 
-    # stage.GetRootLayer().Export("collections.usda")
+    print stage.GetRootLayer().ExportToString()

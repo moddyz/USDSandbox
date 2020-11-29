@@ -91,4 +91,4 @@ if __name__ == "__main__":
     ])
     meshBinding.CreateGeomBindTransformAttr().Set(Gf.Matrix4d())
 
-    # stage.GetRootLayer().Export("skinning.py")
+    print stage.GetRootLayer().ExportToString()
