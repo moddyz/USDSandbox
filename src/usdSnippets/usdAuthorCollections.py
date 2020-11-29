@@ -31,3 +31,5 @@ if __name__ == "__main__":
         Sdf.Path("/city/blockA/building2"),
     ]
     assert set(expectedPaths) == set(collection.ComputeIncludedPaths(query, stage))
+
+    stage.Export("collections.usda")
