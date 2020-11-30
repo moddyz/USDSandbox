@@ -77,4 +77,4 @@ if __name__ == "__main__":
     skeletonBinding = UsdSkel.BindingAPI.Apply(skeleton.GetPrim())
     skeletonBinding.CreateAnimationSourceRel().AddTarget(animation.GetPrim().GetPath())
 
-    print stage.GetRootLayer().ExportToString()
+    print(stage.GetRootLayer().ExportToString())

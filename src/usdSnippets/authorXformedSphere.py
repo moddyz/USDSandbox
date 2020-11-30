@@ -17,4 +17,4 @@ if __name__ == "__main__":
     sphere.AddRotateXYZOp().Set((50, 30, 30))
     sphere.AddScaleOp().Set((2, 2, 2))
 
-    print stage.GetRootLayer().ExportToString()
+    print(stage.GetRootLayer().ExportToString())

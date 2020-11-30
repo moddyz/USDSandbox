@@ -45,5 +45,5 @@ if __name__ == "__main__":
     # Bind mesh to directly to material.
     UsdShade.MaterialBindingAPI(mesh).Bind(material)
 
-    print stage.GetRootLayer().ExportToString()
+    print(stage.GetRootLayer().ExportToString())
 

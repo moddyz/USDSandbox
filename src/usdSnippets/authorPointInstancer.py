@@ -32,4 +32,4 @@ if __name__ == "__main__":
         (30, 30, 30),
     ])
 
-    print stage.GetRootLayer().ExportToString()
+    print(stage.GetRootLayer().ExportToString())
