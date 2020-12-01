@@ -2,7 +2,7 @@
 Basic usage of the subLayer composition operator.
 """
 
-from pxr import Usd, UsdGeom, Sdf
+from pxr import Usd, UsdGeom
 
 if __name__ == "__main__":
 
