@@ -1,5 +1,5 @@
 """
-Testing a SdfLayer.GetExternalReferences query.
+Authoring internal references to a prim in the same layer stack.
 """
 
 from pxr import Usd
