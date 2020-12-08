@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Author a different USD layer.
     stageB = Usd.Stage.CreateInMemory()
     xformPrim = stageB.DefinePrim("/model", "Xform")
-    stageA.SetDefaultPrim(xformPrim)
+    stageB.SetDefaultPrim(xformPrim)
     mesh = UsdGeom.Mesh.Define(stageB, "/model/Geom")
     mesh.CreatePointsAttr().Set([(2, 2, 2)])
 
