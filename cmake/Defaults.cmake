@@ -1,19 +1,14 @@
-# Project defaults.
+# Default build configurations for the USDPluginExamples project.
 
-if(BUILD_TESTING)
-    enable_testing()
-    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
+# By default, build for release.
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(BUILD_DOCUMENTATION)
-    doxygen_documentation(docs
-        GENERATE_TAGFILE
-            TRUE
-        DOXYFILE
-            ${PROJECT_SOURCE_DIR}/src/Doxyfile.in
-        INPUTS
-            ${PROJECT_SOURCE_DIR}/src/exampleSharedLibrary/
-        DEPENDENCIES
-            exampleSharedLibrary
-    )
+# Check if CTest should be enabled.
+if (BUILD_TESTING)
+    enable_testing()
+
+    # Be very verbose on test failure.
+    list(APPEND CMAKE_CTEST_ARGUMENTS "--output-on-failure")
 endif()

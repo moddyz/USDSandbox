@@ -11,23 +11,17 @@ project(
 # Set module search paths.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
                       ${CMAKE_CURRENT_SOURCE_DIR}/cmake
-                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages
-                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tools)
-# Apply options.
+                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages)
+
+# Include options and tools
 include(Options)
-
-# Include project packages.
 include(Packages)
-
-# Apply project defaults.
 include(Defaults)
-
-# Tools
-include(Tools)
+include(USDPluginTools)
 
 # Add targets.
-add_subdirectory(thirdparty)
 add_subdirectory(src)
+add_subdirectory(docs)
 
 # Export
 include(Export)

@@ -1,4 +1,4 @@
-# Discovery of USDSandbox dependencies.
+# Discovery of the dependencies of USDPluginExamples.
 
 # Boost & python.
 if (ENABLE_PYTHON_SUPPORT)
@@ -41,6 +41,28 @@ if (ENABLE_PYTHON_SUPPORT)
                 python
             REQUIRED
         )
+    endif()
+endif()
+
+if(BUILD_DOCUMENTATION)
+    # Discover doxygen.
+    find_program(DOXYGEN_EXECUTABLE
+        NAMES doxygen
+    )
+    if (EXISTS ${DOXYGEN_EXECUTABLE})
+        message(STATUS "Found doxygen executable: ${DOXYGEN_EXECUTABLE}")
+    else()
+        message(FATAL_ERROR "doxygen executable found.")
+    endif()
+
+    # Discover sphinx.
+    find_program(SPHINX_EXECUTABLE
+        NAMES sphinx-build
+    )
+    if (EXISTS ${SPHINX_EXECUTABLE})
+        message(STATUS "Found sphinx executable: ${SPHINX_EXECUTABLE}")
+    else()
+        message(FATAL_ERROR "sphinx executable not found.")
     endif()
 endif()
 

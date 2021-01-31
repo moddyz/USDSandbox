@@ -2,13 +2,13 @@
 # files which are used to import _this_ project into _other_ projects
 # in a robust manner.
 #
-# Note For developers using USDSandbox as a template:
+# Note For developers using USDPluginExamples as a template:
 # Depending on the nature of your project, this module is optional.
 
 # Install exported library targets.
 install(
     EXPORT ${CMAKE_PROJECT_NAME}-targets
-    NAMESPACE USDSandbox::
+    NAMESPACE USDPluginExamples::
     FILE ${CMAKE_PROJECT_NAME}Targets.cmake
     DESTINATION cmake
 )

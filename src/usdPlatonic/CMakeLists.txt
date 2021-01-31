@@ -1,4 +1,4 @@
-usd_shared_library(usdPlatonic
+usd_library(usdPlatonic
 
     PUBLIC_HEADERS_INSTALL_PREFIX
         ${ORGANIZATION}

@@ -1,5 +1,6 @@
 get_filename_component(PACKAGE_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 file(GLOB PYTHON_FILES *.py)
 foreach(PYTHON_FILE ${PYTHON_FILES})
-    usd_python_test(${PACKAGE_NAME} ${PYTHON_FILE})
+    get_filename_component(TEST_NAME ${PYTHON_FILE} NAME_WE)
+    usd_python_test(${PACKAGE_NAME}_${TEST_NAME} ${PYTHON_FILE})
 endforeach()

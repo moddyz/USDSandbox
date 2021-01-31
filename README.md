@@ -14,8 +14,16 @@ Sandbox for experimenting with USD (Universal Scene Description).
 The following dependencies are mandatory:
 - C++ compiler
 - [CMake](https://cmake.org/documentation/) (3.12 or greater)
+- [Python](https://www.python.org/) 
 - [USD](https://github.com/pixaranimationstudios/USD) (20.11)
 - [Boost](https://boost.org) & [Intel TBB](https://www.threadingbuildingblocks.org/) (USD Dependencies)
+
+The following dependencies are required to build documentation:
+- [Doxygen](https://www.doxygen.nl/index.html)
+- [Sphinx](https://www.sphinx-doc.org/) 
+- [breathe](https://github.com/michaeljones/breathe) 
+- [sphinx-tabs](https://github.com/executablebooks/sphinx-tabs)
+- [sphinx-rtd-theme](https://github.com/readthedocs/sphinx_rtd_theme) 
 
 ## Building
 
@@ -28,6 +36,7 @@ cmake \
   -DTBB_ROOT="/apps/usd/20.11/" \
   -DBOOST_ROOT="/apps/usd/20.11/" \
   -DBUILD_TESTING=ON \
+  -DBUILD_DOCUMENTATION=ON \
   -DCMAKE_INSTALL_PREFIX="/apps/USDSandbox/" \
   ..
 cmake --build  . -- VERBOSE=1 -j8 all test install
@@ -43,3 +52,4 @@ CMake options for configuring this project:
 | `ENABLE_PYTHON_SUPPORT` | Enable python support.  Must match python support of USD installation. | `ON`    |
 | `USE_PYTHON_3`          | Build against Python 3 libraries.                                      | `OFF`   |
 | `BUILD_TESTING`         | Enable automated testing.                                              | `OFF`   |
+| `BUILD_DOCUMENTATION`   | Build documentation.                                                   | `OFF`   |
