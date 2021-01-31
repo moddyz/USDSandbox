@@ -20,12 +20,6 @@ jobs:
           - 20.11
           - 21.02
         include:
-          - usdVersion: 20.08
-            usdVersionUrl: 20.08
-            pythonVersion: 3.6
-            USE_PYTHON_3: ON
-            buildType: Release
-            buildTests: 'ON'
           - usdVersion: 20.11
             usdVersionUrl: 20-11
             pythonVersion: 3.6
